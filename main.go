@@ -73,7 +73,39 @@ func main() {
 		})
 	})
 
-	
+	r.PATCH("/users/:id", func(ctx *gin.Context) {
+		idParam := ctx.Param("id")
+		id, _ := strconv.Atoi(idParam)
+
+		var updateUser User
+		if err := ctx.ShouldBindJSON(&updateUser); err != nil {
+			ctx.JSON(400, Response{
+				Success: false,
+				Message: "Gagal membaca JSON",
+				Data:    nil,
+			})
+			return
+		}
+
+		for i, user := range users {
+			if user.Id == id {
+				if updateUser.Name != "" {
+					users[i].Name = updateUser.Name
+				}
+				ctx.JSON(200, Response{
+					Success: true,
+					Message: "Data Berhasil di update",
+					Data:    users[i],
+				})
+				return
+			}
+
+		}
+		ctx.JSON(400, Response{
+			Success: false,
+			Message: "User Tidak Di temukan",
+		})
+	})
 
 	r.Run(":8080")
 }
