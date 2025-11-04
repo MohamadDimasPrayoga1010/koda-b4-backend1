@@ -26,3 +26,16 @@ Content-Type: application/json
 ### Delete User
 DELETE http://localhost:8080/users/3
 Host: 8080
+
+### Register user
+POST http://localhost:8080/auth/register
+Content-Type: application/x-www-form-urlencoded
+
+name=Yoga&email=yoga@gmail.com&password=12345
+
+### Login user
+POST  http://localhost:8080/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+email=yoga@gmail.com&password=12345
+
