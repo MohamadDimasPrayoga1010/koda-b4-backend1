@@ -52,6 +52,27 @@ func main() {
 		})
 	})
 
+	r.POST("/users", func(ctx *gin.Context) {
+		var newUser User
+		if err := ctx.ShouldBindJSON(&newUser); err != nil {
+			ctx.JSON(400, Response{
+				Success: false,
+				Message: "Gagal membaca JSON",
+				Data:    nil,
+			})
+			return
+		}
+
+		newUser.Id = len(users) + 1
+		users = append(users, newUser)
+
+		ctx.JSON(200, Response{
+			Success: true,
+			Message: "Berhasil menambahkan user",
+			Data:    users,
+		})
+	})
+
 	
 
 	r.Run(":8080")
