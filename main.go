@@ -1,14 +1,16 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
 type Response struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
-	Data any `json:"data"`
+	Data    any    `json:"data"`
 }
 
 type User struct {
@@ -29,36 +31,28 @@ func main() {
 			Data:    users,
 		})
 	})
-	r.GET("/users", func(ctx *gin.Context) {
-		var u User
-		if err := ctx.BindQuery(&u); err != nil {
-			ctx.JSON(400, Response{
-				Success: false,
-				Message: "Error binding query",
-			})
-			return
-		}
 
-		search := false
+	r.GET("/users/:id", func(ctx *gin.Context) {
+		idParam := ctx.Param("id")
+		id, _ := strconv.Atoi(idParam)
 		for _, user := range users {
-			if user.Name == u.Name {
-				search = true
-				break
+			if user.Id == id {
+				ctx.JSON(200, Response{
+					Success: true,
+					Message: "User ditemukan",
+					Data:    user,
+				})
+				return
 			}
 		}
-
-		if !search {
-			ctx.JSON(404, Response{
-				Success: false,
-				Message: fmt.Sprintf("Id %d tidak ditemukan!", u.Id),
-			})
-			return
-		}
-
-		ctx.JSON(200, Response{
-			Success: true,
-			Message: fmt.Sprintf("Halo, %s", u.Name),
+		ctx.JSON(400, Response{
+			Success: false,
+			Message: "User tidak ditemukan",
+			Data:    nil,
 		})
 	})
-	r.Run(":8090")
+
+	
+
+	r.Run(":8080")
 }
