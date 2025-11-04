@@ -1,0 +1,28 @@
+### Get semua user
+GET http://localhost:8080/users
+Host: 8080
+
+### Get user ID tertentu
+GET http://localhost:8080/users/1
+Host: 8080
+
+### Tambah user baru
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "Jawir"
+}
+
+### Perbarui nama user
+PATCH http://localhost:8080/users/3
+Content-Type: application/json
+
+{
+  "name": "Dimas Update"
+}
+
+
+### Delete User
+DELETE http://localhost:8080/users/3
+Host: 8080
