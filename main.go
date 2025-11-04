@@ -107,5 +107,27 @@ func main() {
 		})
 	})
 
+	r.DELETE("/users/:id", func(ctx *gin.Context) {
+		idParam := ctx.Param("id")
+		id, _ := strconv.Atoi(idParam)
+		for i, user := range users {
+			if user.Id == id {
+				users = append(users[:i], users[i+1:]...)
+
+				ctx.JSON(200, Response{
+					Success: true,
+					Message: "User Behasil di hapus",
+					Data:    users,
+				})
+				return
+			}
+		}
+		ctx.JSON(400, Response{
+			Success: false,
+			Message: "User Tidak Ditemukan",
+		})
+
+	})
+
 	r.Run(":8080")
 }
