@@ -19,7 +19,9 @@ PATCH http://localhost:8080/users/3
 Content-Type: application/json
 
 {
-  "name": "Dimas Update"
+  "name": "Yoga Dev",
+  "email": "yoga@gmail.com",
+  "password": "rahasiaBaru"
 }
 
 
