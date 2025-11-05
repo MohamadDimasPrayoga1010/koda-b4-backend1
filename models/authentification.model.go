@@ -9,11 +9,22 @@ type Response struct {
 type User struct {
 	Id       int    `form:"id"`
 	Name     string `form:"name"`
-	Email    string `form:"email"`
+	Email    string `form:"email" json:""`
 	Password string `form:"password"`
 }
 
 var Users = []User{
 	{Id: 1, Name: "Yoga"},
 	{Id: 2, Name: "Dimas"},
+}
+
+type RegisterRequest struct {
+	Name     string `form:"name" example:"Yoga"`
+	Email    string `form:"email" example:"yoga@mail.com"`
+	Password string `form:"password" example:"123456"`
+}
+
+type LoginRequest struct {
+	Email    string `form:"email" example:"yoga@mail.com"`
+	Password string `form:"password" example:"123456"`
 }
