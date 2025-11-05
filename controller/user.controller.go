@@ -2,7 +2,7 @@ package controller
 
 import (
 	"strconv"
-
+	"github.com/matthewhartstonge/argon2"
 	"github.com/gin-gonic/gin"
 	"main.go/models"
 )
@@ -85,17 +85,36 @@ func(u *User) EditUser(ctx *gin.Context) {
 
 	for i, user := range users {
 		if user.Id == id {
+
 			if updateUser.Name != "" {
 				users[i].Name = updateUser.Name
 			}
+
+			if updateUser.Email != "" {
+				users[i].Email = updateUser.Email
+			}
+
+			if updateUser.Password != "" {
+				argon := argon2.DefaultConfig()
+				encoded, err := argon.HashEncoded([]byte(updateUser.Password))
+				if err != nil {
+					ctx.JSON(400, models.Response{
+						Success: false,
+						Message: "Gagal hash password baru",
+						Data:    nil,
+					})
+					return
+				}
+				users[i].Password = string(encoded)
+			}
+
 			ctx.JSON(200, models.Response{
 				Success: true,
-				Message: "Data Berhasil di update",
+				Message: "Data berhasil diperbarui",
 				Data:    users[i],
 			})
 			return
 		}
-
 	}
 	ctx.JSON(400, models.Response{
 		Success: false,
