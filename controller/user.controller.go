@@ -2,10 +2,14 @@ package controller
 
 import (
 	"strconv"
-	"github.com/matthewhartstonge/argon2"
+	"strings"
+
 	"github.com/gin-gonic/gin"
+	"github.com/matthewhartstonge/argon2"
 	"main.go/models"
 )
+
+
 
 type User struct{}
 
@@ -20,14 +24,77 @@ type UserController interface{
 func NewUserController(uc UserController) UserController{
 	return uc
 }
-
+// GetUsers godoc
+// @Summary Ambil daftar user dengan paginasi dan pencarian
+// @Description Menampilkan daftar user berdasarkan halaman (page), limit, dan kata kunci pencarian (search)
+// @Tags Users
+// @Produce json
+// @Param page query int false "Nomor halaman (default: 1)"
+// @Param limit query int false "Jumlah data per halaman (default: 10)"
+// @Param search query string false "Kata kunci pencarian nama user"
+// @Success 200 {object} models.Response
+// @Router /users [get]
 func (u *User) GetUsers(ctx *gin.Context) {
+	pageStr := ctx.DefaultQuery("page", "1")
+	limitStr := ctx.DefaultQuery("limit", "10")
+	search := strings.ToLower(ctx.DefaultQuery("search", ""))
+
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil || limit < 1 {
+		limit = 10
+	}
+
+	filteredUsers := []models.User{}
+	for _, user := range users {
+		if search == "" || strings.Contains(strings.ToLower(user.Name), search) {
+			filteredUsers = append(filteredUsers, user)
+		}
+	}
+
+	totalData := len(filteredUsers)
+	start := (page - 1) * limit
+	end := start + limit
+
+	if start > totalData {
+		start = totalData
+	}
+	if end > totalData {
+		end = totalData
+	}
+
+	pagedUsers := filteredUsers[start:end]
+
+	totalPages := (totalData + limit - 1) / limit 
+
 	ctx.JSON(200, models.Response{
 		Success: true,
-		Data:    users,
+		Message: "Berhasil ambil data user",
+		Data: gin.H{
+			"page":         page,
+			"limit":        limit,
+			"search":       search,
+			"total_data":   totalData,
+			"total_pages":  totalPages,
+			"users":        pagedUsers,
+		},
 	})
 }
 
+// GetUserId godoc
+// @Summary Ambil user berdasarkan ID
+// @Description Mendapatkan data user sesuai ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id path int true "ID User"
+// @Success 200 {object} models.Response
+// @Failure 400 {object} models.Response
+// @Router /users/{id} [get]
 func (u *User) GetUserId(ctx *gin.Context) {
 	idParam := ctx.Param("id")
 	id, _ := strconv.Atoi(idParam)
@@ -48,6 +115,16 @@ func (u *User) GetUserId(ctx *gin.Context) {
 	})
 }
 
+// AddUser godoc
+// @Summary Tambah user baru
+// @Description Menambahkan user baru ke sistem
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param user body models.User true "Data user baru"
+// @Success 200 {object} models.Response
+// @Failure 400 {object} models.Response
+// @Router /users [post]
 func(u *User) AddUser(ctx *gin.Context) {
 	var newUser models.User
 	if err := ctx.ShouldBindJSON(&newUser); err != nil {
@@ -69,6 +146,17 @@ func(u *User) AddUser(ctx *gin.Context) {
 	})
 }
 
+// EditUser godoc
+// @Summary Edit data user
+// @Description Mengedit data user berdasarkan ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id path int true "ID User"
+// @Param user body models.User true "Data user yang diupdate"
+// @Success 200 {object} models.Response
+// @Failure 400 {object} models.Response
+// @Router /users/{id} [patch]
 func(u *User) EditUser(ctx *gin.Context) {
 	idParam := ctx.Param("id")
 	id, _ := strconv.Atoi(idParam)
@@ -122,6 +210,16 @@ func(u *User) EditUser(ctx *gin.Context) {
 	})
 }
 
+// DeleteUser godoc
+// @Summary Hapus user
+// @Description Menghapus user berdasarkan ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id path int true "ID User"
+// @Success 200 {object} models.Response
+// @Failure 400 {object} models.Response
+// @Router /users/{id} [delete]
 func(u *User) DeleteUser(ctx *gin.Context) {
 	idParam := ctx.Param("id")
 	id, _ := strconv.Atoi(idParam)
