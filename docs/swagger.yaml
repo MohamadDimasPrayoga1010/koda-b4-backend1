@@ -1,0 +1,229 @@
+basePath: /
+definitions:
+  models.Response:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  models.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+host: localhost:8085
+info:
+  contact:
+    email: yoga@example.com
+    name: Yoga
+    url: https://github.com/yoga
+  description: Ini adalah dokumentasi API sederhana menggunakan Gin & Swagger
+  termsOfService: http://swagger.io/terms/
+  title: API User & Auth Example Yoga
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Melakukan autentikasi user via form input
+      parameters:
+      - description: Email user
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Password user
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login berhasil
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Login gagal
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Login user
+      tags:
+      - Authentication
+  /auth/register:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Mendaftarkan akun user baru via form input
+      parameters:
+      - description: Nama user
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Email user
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Password user
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Register berhasil
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Gagal register
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Register akun baru
+      tags:
+      - Authentication
+  /users:
+    get:
+      description: Menampilkan daftar user berdasarkan halaman (page), limit, dan
+        kata kunci pencarian (search)
+      parameters:
+      - description: 'Nomor halaman (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Jumlah data per halaman (default: 10)'
+        in: query
+        name: limit
+        type: integer
+      - description: Kata kunci pencarian nama user
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Ambil daftar user dengan paginasi dan pencarian
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Menambahkan user baru ke sistem
+      parameters:
+      - description: Data user baru
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Tambah user baru
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Menghapus user berdasarkan ID
+      parameters:
+      - description: ID User
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Hapus user
+      tags:
+      - Users
+    get:
+      consumes:
+      - application/json
+      description: Mendapatkan data user sesuai ID
+      parameters:
+      - description: ID User
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Ambil user berdasarkan ID
+      tags:
+      - Users
+    patch:
+      consumes:
+      - application/json
+      description: Mengedit data user berdasarkan ID
+      parameters:
+      - description: ID User
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Data user yang diupdate
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Edit data user
+      tags:
+      - Users
+swagger: "2.0"
