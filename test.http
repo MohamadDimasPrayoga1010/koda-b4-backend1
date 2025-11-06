@@ -1,14 +1,22 @@
 ### Get semua user
 GET http://localhost:8085/users
 Host: 8085
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiaXNzIjoiZ28tand0LWFwcCIsImV4cCI6MTc2MjUxMjI1NCwiaWF0IjoxNzYyNDI1ODU0fQ.LU8Eq2BP3VEW7iY1bGXT-pRS6csWYzRyWfxKq8uwlHs
+
 
 ### Get user ID tertentu
 GET http://localhost:8085/users/1
 Host: 8085
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiaXNzIjoiZ28tand0LWFwcCIsImV4cCI6MTc2MjUxMjI1NCwiaWF0IjoxNzYyNDI1ODU0fQ.LU8Eq2BP3VEW7iY1bGXT-pRS6csWYzRyWfxKq8uwlHs
+
+
 
 ### Tambah user baru
 POST http://localhost:8085/users
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiaXNzIjoiZ28tand0LWFwcCIsImV4cCI6MTc2MjUxMjI1NCwiaWF0IjoxNzYyNDI1ODU0fQ.LU8Eq2BP3VEW7iY1bGXT-pRS6csWYzRyWfxKq8uwlHs
+
+
 
 {
   "name": "Jawir"
@@ -17,6 +25,8 @@ Content-Type: application/json
 ### Perbarui nama user
 PATCH http://localhost:8085/users/3
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiaXNzIjoiZ28tand0LWFwcCIsImV4cCI6MTc2MjUxMjI1NCwiaWF0IjoxNzYyNDI1ODU0fQ.LU8Eq2BP3VEW7iY1bGXT-pRS6csWYzRyWfxKq8uwlHs
+
 
 {
   "name": "Yoga Dev",
@@ -28,6 +38,9 @@ Content-Type: application/json
 ### Delete User
 DELETE http://localhost:8085/users/3
 Host: 8085
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiaXNzIjoiZ28tand0LWFwcCIsImV4cCI6MTc2MjUxMjI1NCwiaWF0IjoxNzYyNDI1ODU0fQ.LU8Eq2BP3VEW7iY1bGXT-pRS6csWYzRyWfxKq8uwlHs
+
+
 
 ### Register user
 POST http://localhost:8085/auth/register
@@ -44,6 +57,9 @@ email=yoga@gmail.com&password=12345
 ### Upload foto profil user
 PATCH  http://localhost:8085/users/1/upload
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiaXNzIjoiZ28tand0LWFwcCIsImV4cCI6MTc2MjUxMjI1NCwiaWF0IjoxNzYyNDI1ODU0fQ.LU8Eq2BP3VEW7iY1bGXT-pRS6csWYzRyWfxKq8uwlHs
+
+
 
 ------WebKitFormBoundary
 Content-Disposition: form-data; name="picture"; filename="foto.jpeg"
