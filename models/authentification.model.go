@@ -15,8 +15,8 @@ type User struct {
 }
 
 var Users = []User{
-	{Id: 1, Name: "Yoga"},
-	{Id: 2, Name: "Dimas"},
+	{Id: 1, Name: "Yoga", Email: "y@mail.com", Password: "123"},
+	{Id: 2, Name: "Dimas", Email: "d@mail.com", Password: "1"},
 }
 
 type RegisterRequest struct {
