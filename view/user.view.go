@@ -14,4 +14,5 @@ func InitUser(r *gin.Engine){
 	user.POST("", ucer.AddUser)
 	user.PATCH("/:id", ucer.EditUser)
 	user.DELETE("/:id", ucer.DeleteUser)
+	user.PATCH("/:id/upload", ucer.UploadProfilePicture)
 }
