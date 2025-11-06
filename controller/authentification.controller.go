@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/matthewhartstonge/argon2"
+	"main.go/lib"
 	"main.go/models"
 )
 
@@ -156,6 +157,15 @@ func (a *Authentication) Login(ctx *gin.Context) {
 				return
 			}
 
+			token, err := lib.GenerateToken(u.Id) 
+			if err != nil {
+				ctx.JSON(500, models.Response{
+					Success: false,
+					Message: "Gagal generate token",
+				})
+				return
+			}
+
 			ctx.JSON(200, models.Response{
 				Success: true,
 				Message: "Login berhasil",
@@ -163,6 +173,7 @@ func (a *Authentication) Login(ctx *gin.Context) {
 					"id":    u.Id,
 					"name":  u.Name,
 					"email": u.Email,
+					"token": token,
 				},
 			})
 			return
