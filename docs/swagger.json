@@ -2,13 +2,9 @@
     "swagger": "2.0",
     "info": {
         "description": "Ini adalah dokumentasi API sederhana menggunakan Gin \u0026 Swagger",
-        "title": "API User \u0026 Auth Example Yoga",
+        "title": "API User \u0026 Auth Example",
         "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "name": "Yoga",
-            "url": "https://github.com/yoga",
-            "email": "yoga@example.com"
-        },
+        "contact": {},
         "version": "1.0"
     },
     "host": "localhost:8085",
@@ -307,6 +303,51 @@
                     }
                 }
             }
+        },
+        "/users/{id}/upload": {
+            "patch": {
+                "description": "Upload foto profil berdasarkan ID user",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Upload foto profil user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID User",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "File foto profil (max 1MB)",
+                        "name": "picture",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -335,6 +376,9 @@
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                },
+                "picture": {
                     "type": "string"
                 }
             }

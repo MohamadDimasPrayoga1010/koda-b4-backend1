@@ -18,16 +18,15 @@ definitions:
         type: string
       password:
         type: string
+      picture:
+        type: string
     type: object
 host: localhost:8085
 info:
-  contact:
-    email: yoga@example.com
-    name: Yoga
-    url: https://github.com/yoga
+  contact: {}
   description: Ini adalah dokumentasi API sederhana menggunakan Gin & Swagger
   termsOfService: http://swagger.io/terms/
-  title: API User & Auth Example Yoga
+  title: API User & Auth Example
   version: "1.0"
 paths:
   /auth/login:
@@ -224,6 +223,36 @@ paths:
           schema:
             $ref: '#/definitions/models.Response'
       summary: Edit data user
+      tags:
+      - Users
+  /users/{id}/upload:
+    patch:
+      consumes:
+      - multipart/form-data
+      description: Upload foto profil berdasarkan ID user
+      parameters:
+      - description: ID User
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: File foto profil (max 1MB)
+        in: formData
+        name: picture
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Upload foto profil user
       tags:
       - Users
 swagger: "2.0"

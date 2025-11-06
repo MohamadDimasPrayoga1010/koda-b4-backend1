@@ -10,11 +10,7 @@ const docTemplate = `{
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
         "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "name": "Yoga",
-            "url": "https://github.com/yoga",
-            "email": "yoga@example.com"
-        },
+        "contact": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -313,6 +309,51 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/{id}/upload": {
+            "patch": {
+                "description": "Upload foto profil berdasarkan ID user",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Upload foto profil user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID User",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "File foto profil (max 1MB)",
+                        "name": "picture",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -342,6 +383,9 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
+                },
+                "picture": {
+                    "type": "string"
                 }
             }
         }
@@ -354,7 +398,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8085",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "API User & Auth Example Yoga",
+	Title:            "API User & Auth Example",
 	Description:      "Ini adalah dokumentasi API sederhana menggunakan Gin & Swagger",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
