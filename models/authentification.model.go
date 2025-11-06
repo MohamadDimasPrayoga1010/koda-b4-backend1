@@ -11,6 +11,7 @@ type User struct {
 	Name     string `form:"name"`
 	Email    string `form:"email" json:""`
 	Password string `form:"password"`
+	ProfilePicture string `form:"picture"`
 }
 
 var Users = []User{
