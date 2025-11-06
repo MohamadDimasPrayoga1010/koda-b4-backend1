@@ -9,11 +9,9 @@ import (
 	"main.go/models"
 )
 
-
-
 type User struct{}
 
-type UserController interface{
+type UserController interface {
 	GetUsers(ctx *gin.Context)
 	GetUserId(ctx *gin.Context)
 	EditUser(ctx *gin.Context)
@@ -21,9 +19,10 @@ type UserController interface{
 	DeleteUser(ctx *gin.Context)
 }
 
-func NewUserController(uc UserController) UserController{
+func NewUserController(uc UserController) UserController {
 	return uc
 }
+
 // GetUsers godoc
 // @Summary Ambil daftar user dengan paginasi dan pencarian
 // @Description Menampilkan daftar user berdasarkan halaman (page), limit, dan kata kunci pencarian (search)
@@ -69,18 +68,18 @@ func (u *User) GetUsers(ctx *gin.Context) {
 
 	pagedUsers := filteredUsers[start:end]
 
-	totalPages := (totalData + limit - 1) / limit 
+	totalPages := (totalData + limit - 1) / limit
 
 	ctx.JSON(200, models.Response{
 		Success: true,
 		Message: "Berhasil ambil data user",
 		Data: gin.H{
-			"page":         page,
-			"limit":        limit,
-			"search":       search,
-			"total_data":   totalData,
-			"total_pages":  totalPages,
-			"users":        pagedUsers,
+			"page":        page,
+			"limit":       limit,
+			"search":      search,
+			"total_data":  totalData,
+			"total_pages": totalPages,
+			"users":       pagedUsers,
 		},
 	})
 }
@@ -125,7 +124,7 @@ func (u *User) GetUserId(ctx *gin.Context) {
 // @Success 200 {object} models.Response
 // @Failure 400 {object} models.Response
 // @Router /users [post]
-func(u *User) AddUser(ctx *gin.Context) {
+func (u *User) AddUser(ctx *gin.Context) {
 	var newUser models.User
 	if err := ctx.ShouldBindJSON(&newUser); err != nil {
 		ctx.JSON(400, models.Response{
@@ -157,7 +156,7 @@ func(u *User) AddUser(ctx *gin.Context) {
 // @Success 200 {object} models.Response
 // @Failure 400 {object} models.Response
 // @Router /users/{id} [patch]
-func(u *User) EditUser(ctx *gin.Context) {
+func (u *User) EditUser(ctx *gin.Context) {
 	idParam := ctx.Param("id")
 	id, _ := strconv.Atoi(idParam)
 
@@ -220,7 +219,7 @@ func(u *User) EditUser(ctx *gin.Context) {
 // @Success 200 {object} models.Response
 // @Failure 400 {object} models.Response
 // @Router /users/{id} [delete]
-func(u *User) DeleteUser(ctx *gin.Context) {
+func (u *User) DeleteUser(ctx *gin.Context) {
 	idParam := ctx.Param("id")
 	id, _ := strconv.Atoi(idParam)
 	for i, user := range users {
@@ -240,4 +239,87 @@ func(u *User) DeleteUser(ctx *gin.Context) {
 		Message: "User Tidak Ditemukan",
 	})
 
+}
+
+// UploadProfilePicture godoc
+// @Summary Upload foto profil user
+// @Description Upload foto profil berdasarkan ID user
+// @Tags Users
+// @Accept multipart/form-data
+// @Produce json
+// @Param id path int true "ID User"
+// @Param picture formData file true "File foto profil (max 1MB)"
+// @Success 200 {object} models.Response
+// @Failure 400 {object} models.Response
+// @Router /users/{id}/upload [patch]
+func (u *User) UploadProfilePicture(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	found := false
+
+	for _, usr := range users {
+		if strconv.Itoa(usr.Id) == id {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		ctx.JSON(400, models.Response{
+			Success: false,
+			Message: "User Tidak Ditemukan",
+		})
+		return
+	}
+
+	file, err := ctx.FormFile("picture")
+	if err != nil {
+		ctx.JSON(400, models.Response{
+			Success: false,
+			Message: "Picture wajib diisi",
+		})
+		return
+	}
+
+	const maxFileSize = 1 * 1024 * 1024
+	if file.Size > int64(maxFileSize) {
+		ctx.JSON(400, models.Response{
+			Success: false,
+			Message: "Ukuran file terlalu besar (maks 1MB)",
+		})
+		return
+	}
+
+	// fileExt := strings.ToLower(filepath.Ext(file.Filename))
+	// if fileExt != ".jpg" && fileExt != ".jpeg" {
+	// 	ctx.JSON(400, models.Response{
+	// 		Success: false,
+	// 		Message: "Format file tidak valid (hanya .jpg atau .jpeg)",
+	// 	})
+	// 	return
+	// }
+
+	savePath := "./uploads/profile-picture/" + id + ".jpeg"
+
+	if err := ctx.SaveUploadedFile(file, savePath); err != nil {
+		ctx.JSON(400, models.Response{
+			Success: false,
+			Message: "Gagal menyimpan file",
+		})
+		return
+	}
+	var userIndex int
+
+	users[userIndex].ProfilePicture = savePath
+
+	ctx.JSON(200, models.Response{
+		Success: true,
+		Message: "Upload foto profil berhasil",
+		Data: gin.H{
+			"id":      id,
+			"name":    users[userIndex].Name,
+			"email":   users[userIndex].Email,
+			"picture": users[userIndex].ProfilePicture,
+		},
+	})
 }
