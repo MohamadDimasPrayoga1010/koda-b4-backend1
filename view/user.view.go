@@ -3,12 +3,13 @@ package view
 import (
 	"github.com/gin-gonic/gin"
 	"main.go/controller"
+	"main.go/lib"
 )
 
 func InitUser(r *gin.Engine){
 	var ucer controller.User
-	
-	user := r.Group("users")
+	user := r.Group("/users")
+	user.Use(lib.VerifToken()) 
 	user.GET("/", ucer.GetUsers)
 	user.GET("/:id", ucer.GetUserId)
 	user.POST("", ucer.AddUser)
