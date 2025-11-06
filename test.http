@@ -1,13 +1,13 @@
 ### Get semua user
-GET http://localhost:8080/users
-Host: 8080
+GET http://localhost:8085/users
+Host: 8085
 
 ### Get user ID tertentu
-GET http://localhost:8080/users/1
-Host: 8080
+GET http://localhost:8085/users/1
+Host: 8085
 
 ### Tambah user baru
-POST http://localhost:8080/users
+POST http://localhost:8085/users
 Content-Type: application/json
 
 {
@@ -15,7 +15,7 @@ Content-Type: application/json
 }
 
 ### Perbarui nama user
-PATCH http://localhost:8080/users/3
+PATCH http://localhost:8085/users/3
 Content-Type: application/json
 
 {
@@ -26,18 +26,28 @@ Content-Type: application/json
 
 
 ### Delete User
-DELETE http://localhost:8080/users/3
-Host: 8080
+DELETE http://localhost:8085/users/3
+Host: 8085
 
 ### Register user
-POST http://localhost:8080/auth/register
+POST http://localhost:8085/auth/register
 Content-Type: application/x-www-form-urlencoded
 
 name=Yoga&email=yoga@gmail.com&password=12345
 
 ### Login user
-POST  http://localhost:8080/auth/login
+POST  http://localhost:8085/auth/login
 Content-Type: application/x-www-form-urlencoded
 
 email=yoga@gmail.com&password=12345
 
+### Upload foto profil user
+PATCH  http://localhost:8085/users/1/upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="picture"; filename="foto.jpeg"
+Content-Type: image/jpeg
+
+< /home/yoga/Downloads/test.png
+------WebKitFormBoundary--
